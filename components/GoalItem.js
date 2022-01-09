@@ -1,9 +1,11 @@
 import React from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, TouchableOpacity} from 'react-native'
 import { StyleSheet } from 'react-native'
 
 const GoalItem = (props) => (
-    <View style={styles.listItem}><Text>{props.title}</Text></View>
+    <TouchableOpacity activeOpacity={0.1} onPress={props.Delete.bind(this, props.id)}>
+        <View style={styles.listItem}><Text>{props.title}</Text></View>
+    </TouchableOpacity>
 )
 
 const styles = StyleSheet.create({

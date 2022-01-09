@@ -1,31 +1,37 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, FlatList } from 'react-native';
+import { StyleSheet, View, Button, FlatList } from 'react-native';
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
 
 export default function App() {
-  const [enteredGoal, setEntredGoal] = useState('');
-  const [courseGoal, setCourseGoal] = useState([]);
+  
+  const [courseGoals, setCourseGoal] = useState([]);
+  const [addModal, setAddModal] = useState(false);
 
-  const InputHandler = (enteredText) => {
-    setEntredGoal(enteredText);
+  const setGoalHandler = goalTitle => {
+    setCourseGoal([...courseGoals, {id: Math.random().toString(), value: goalTitle}]);
+    setAddModal(false)
   }
-  const setGoalHandler = () => {
-    setCourseGoal([...courseGoal, {id: Math.random().toString(), value: enteredGoal}]);
+  const DeleteHandler = goalId => {
+       setCourseGoal(courseGoals => {
+        return courseGoals.filter((goalItem) => goalItem.id !== goalId)
+      })
+  }
+  const hideModal = () => {
+    setAddModal(false)
   }
   return (
     <View style={styles.screen}>
+      <Button title="Add New Course Goal" onPress={() => setAddModal(true)}/>
       <GoalInput 
-        InputHandler={InputHandler}
-        enteredGoal={enteredGoal}
+        visible={addModal}
         setGoalHandler={setGoalHandler}
+        hideModal={hideModal}
         />
       <FlatList 
-        data={courseGoal}
-        renderItem={itemData => <GoalItem title={itemData.item.value}/>}
+        data={courseGoals}
+        renderItem={itemData => <GoalItem id={itemData.item.id} Delete={DeleteHandler} title={itemData.item.value}/>}
       />
-       
-      
     </View>
   );
 }
